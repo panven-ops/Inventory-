@@ -4,8 +4,6 @@ const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
 
-  console.log("AUTH CONTEXT EXECUTED");
-
 
   const [accessToken, setAccessToken] = useState("");
   const [refreshToken, setRefreshToken] = useState("");

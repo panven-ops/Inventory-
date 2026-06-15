@@ -23,9 +23,9 @@ class SubItem(BaseModel):
     @classmethod
     def validate_quantity(cls, v):
         if v < 0:
-            raise ValueError("Η ποσότητα δεν μπορεί να είναι αρνητική")
+            raise ValueError("Quantity can't be negative")
         if v > 999999:
-            raise ValueError("Μη έγκυρη ποσότητα")
+            raise ValueError("Invalid quantity")
         return v
 
 class SubItemOut(BaseModel):

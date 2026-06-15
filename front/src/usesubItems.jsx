@@ -5,7 +5,6 @@ export function useSubItems({ accessToken, refreshToken, setAccessToken, logout 
   const [subItemsMap, setSubItemsMap] = useState({});
   const [openCategories, setOpenCategories] = useState({});
 
-  // Ανοίγει/κλείνει το accordion και φέρνει τα sub-items αν δεν τα έχει
   const toggleCategory = useCallback(async (categoryId) => {
     const isOpen = openCategories[categoryId];
 
@@ -14,7 +13,6 @@ export function useSubItems({ accessToken, refreshToken, setAccessToken, logout 
       return;
     }
 
-    // Αν δεν έχουμε ήδη τα sub-items, κάνε fetch
     if (!subItemsMap[categoryId]) {
       const res = await authFetch({
         url: `/items/${categoryId}/sub-items`,
@@ -63,10 +61,8 @@ export function useSubItems({ accessToken, refreshToken, setAccessToken, logout 
   };
 
   const updateQuantity = async (categoryId, subItemId, newQuantity) => {
-    // Αν πάει κάτω από 0, σταμάτα
     if (newQuantity < 0) return;
 
-    // Optimistic update — αλλάζει αμέσως στο UI
     setSubItemsMap((prev) => ({
       ...prev,
       [categoryId]: prev[categoryId].map((s) =>

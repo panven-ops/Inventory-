@@ -77,7 +77,6 @@ def  get_refresh_user(credentials: HTTPAuthorizationCredentials = Depends(securi
         raise HTTPException(status_code=401, detail="Invalid refresh token")
       
 def get_current_admin(credentials: HTTPAuthorizationCredentials = Depends(security)):
-    # 1. Διαβάζει και επαληθεύει το token (ίδια λογική με get_current_user)
     token = credentials.credentials
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
@@ -87,7 +86,6 @@ def get_current_admin(credentials: HTTPAuthorizationCredentials = Depends(securi
     except JWTError:
         raise HTTPException(status_code=401, detail="Invalid token")
 
-    # 2. Ελέγχει στη DB αν ο user είναι admin
     db = SessionLocal()
     try:
         user = get_user_by_id(db, user_id)

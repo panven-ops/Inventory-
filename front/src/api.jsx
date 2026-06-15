@@ -1,8 +1,6 @@
 const API_URL = "http://localhost:8000";
 
-/**
- * Refresh access token using refresh token
- */
+
 export const refreshAccessToken = async (refresh_token) => {
   try {
     const res = await fetch(`${API_URL}/refresh`, {
@@ -22,12 +20,6 @@ export const refreshAccessToken = async (refresh_token) => {
   }
 };
 
-/**
- * Main auth fetch wrapper
- * Handles:
- * - adding access token
- * - retry on 401 using refresh token
- */
 export const authFetch = async ({
   url,
   method = "GET",
@@ -37,7 +29,6 @@ export const authFetch = async ({
   setAccessToken,
   logout,
 }) => {
-  // 1st request
   let res = await fetch(`${API_URL}${url}`, {
     method,
     headers: {
@@ -47,7 +38,6 @@ export const authFetch = async ({
     body: body ? JSON.stringify(body) : undefined,
   });
 
-  // If token expired → refresh
   if (res.status === 401) {
     const newAccessToken = await refreshAccessToken(refreshToken);
 
@@ -59,11 +49,9 @@ export const authFetch = async ({
       setAccessToken(newAccessToken);
     }
 
-    // update state in React
     setAccessToken(newAccessToken);
     localStorage.setItem("access_token", newAccessToken);
 
-    // retry request with new token
     res = await fetch(`${API_URL}${url}`, {
       method,
       headers: {

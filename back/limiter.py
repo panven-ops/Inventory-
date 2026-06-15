@@ -9,7 +9,7 @@ def get_user_id_from_request(request: Request):
     auth = request.headers.get("Authorization")
 
     if not auth or not auth.startswith("Bearer "):
-        return request.client.host  # fallback σε IP
+        return request.client.host  # fallback to IP
 
     try:
         token = auth.split(" ")[1]

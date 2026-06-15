@@ -30,7 +30,6 @@ export function useItems() {
     const cacheKey = `${skip}-${limit}`;
 
     const getItems = async () => {
-    // 👉 1. check cache
       if (cacheRef.current[cacheKey]) {
         const cached = cacheRef.current[cacheKey];
         setItems(cached.data);
@@ -38,7 +37,6 @@ export function useItems() {
         return;
       }
 
-    // 👉 2. fetch if not cached
       const res = await authFetch({
         url: `/items?skip=${skip}&limit=${limit}`,
         accessToken,
@@ -52,7 +50,6 @@ export function useItems() {
       setItems(data.data);
       setTotal(data.total);
 
-    // 👉 3. store cache
       cacheRef.current[cacheKey] = {
         data: data.data,
         total: data.total,

@@ -12,6 +12,7 @@ class UserDB(Base, BaseModelMixin):
     failed_attempts = Column(Integer, default=0)
     lock_until = Column(DateTime(timezone=True), nullable=True)
     is_admin = Column(Boolean, default=False, nullable=False)
+
 class ItemDB(Base, BaseModelMixin):
     __tablename__ = "items"
     id = Column(Integer, primary_key=True, index=True)

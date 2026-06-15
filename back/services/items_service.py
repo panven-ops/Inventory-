@@ -14,9 +14,7 @@ from model import ItemOut
 from redis_client import redis_client
 
 
-# =========================
 # CACHE KEYS
-# =========================
 
 def items_list_key(user_id, skip, limit):
     return f"items:{user_id}:{skip}:{limit}"
@@ -26,18 +24,14 @@ def item_key(item_id):
     return f"item:{item_id}"
 
 
-# =========================
 # CACHE INVALIDATION
-# =========================
 
 def invalidate_user_cache(user_id):
     for key in redis_client.scan_iter(f"items:{user_id}:*"):
         redis_client.delete(key)
 
 
-# =========================
 # GET USER ITEMS (cached)
-# =========================
 
 def get_user_items(db, user_id, skip, limit):
     cache_key = items_list_key(user_id, skip, limit)
@@ -65,9 +59,7 @@ def get_user_items(db, user_id, skip, limit):
     return result
 
 
-# =========================
 # GET SINGLE ITEM (cached)
-# =========================
 
 def get_single_item(db, item_id):
     cache_key = item_key(item_id)
@@ -88,9 +80,7 @@ def get_single_item(db, item_id):
     return data
 
 
-# =========================
 # CREATE ITEM
-# =========================
 
 def add_item_service(db, item, user_id):
     new_item = create_item(db, item.name, user_id)
@@ -100,9 +90,7 @@ def add_item_service(db, item, user_id):
     return ItemOut.model_validate(new_item).model_dump()
 
 
-# =========================
 # DELETE ITEM
-# =========================
 
 def delete_item_service(db, item_id, user_id):
     item = get_item_by_id(db, item_id)
@@ -119,9 +107,7 @@ def delete_item_service(db, item_id, user_id):
     invalidate_user_cache(user_id)
 
 
-# =========================
 # UPDATE ITEM
-# =========================
 
 def update_item_service(db, item_id, updated_item, user_id):
     item = get_item_by_id(db, item_id)
