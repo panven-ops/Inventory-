@@ -1,7 +1,13 @@
 
-# Inventory Managment
+# Inventory Management
 
 A full-stack inventory management system built for a small retail business. Manages product categories, stock items with quantities, multi-user access and a complete audit trail of all activity.
+
+## Tech Stack
+
+- Backend:  FastAPI, PostgreSQL, Redis, SQLAlchemy, Alembic, Docker
+
+- Frontend: React, Vite, Tailwind CSS
 
 
 ## Features
@@ -54,7 +60,7 @@ app/
 | Method | Endpoint | Auth | Description                |
 | :-------- | :------- | :------- | :------------------------- |
 | POST | /register |  | Create account |
-|POST| /login| | Returns acess & refresh tokens|
+|POST| /login| | Returns access & refresh tokens|
 | POST| /refresh| Refresh token| Get new access token|
 
 #### Items/Categories
@@ -92,9 +98,9 @@ app/
 Clone the project
 
 ```bash
-    git clone https://github.com/panven-ops/Inventory
+    git clone https://github.com/panven-ops/Inventory-.git
     
-    cd Inventory
+    cd Inventory-
     
     pip install -r requirements.txt
 
@@ -110,6 +116,11 @@ Create app/back/.env
 
 `DATABASE_URL`
 
+`REDIS_HOST`
+
+`REDIS_PORT`
+
+`ENABLE_RATE_LIMIT`
 
 ## Running Tests
 
