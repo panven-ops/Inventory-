@@ -1,0 +1,17 @@
+# env files
+.env
+
+# python
+__pycache__/
+*.pyc
+
+# virtual env
+venv/
+.env/
+
+# database
+*.db
+
+# IDE
+.vscode/
+.idea/
