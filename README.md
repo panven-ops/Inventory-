@@ -101,26 +101,28 @@ Clone the project
     git clone https://github.com/panven-ops/Inventory-.git
     
     cd Inventory-
-    
-    pip install -r requirements.txt
 
+    pip install -r requirements.txt
+   
     docker compose up
 ```
 
 API will be available at http://localhost:8000
 ## Environment Variables
 
-Create app/back/.env
+Copy the example file and fill in the values:
 
-`SECRET_KEY`
+```bash
+cp back/.env.example back/.env
+```
 
-`DATABASE_URL`
-
-`REDIS_HOST`
-
-`REDIS_PORT`
-
-`ENABLE_RATE_LIMIT`
+| Variable | Description |
+| :------- | :---------- |
+| SECRET_KEY | Secret key for JWT signing |
+| DATABASE_URL | PostgreSQL connection string |
+| REDIS_HOST | Redis hostname (default: redis) |
+| REDIS_PORT | Redis port (default: 6379) |
+| ENABLE_RATE_LIMIT | Enable rate limiting (true/false) |
 
 ## Running Tests
 
