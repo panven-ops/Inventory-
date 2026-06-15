@@ -15,6 +15,9 @@ venv/
 # Alembic test db
 *.db
 
+# Logs
+*.log
+
 # Node
 node_modules/
 dist/
