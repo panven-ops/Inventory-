@@ -31,6 +31,7 @@ def test_pagination(auth_client):
 
 def test_delete_item(auth_client):
     res = auth_client.post("/items", json={"name": "To Delete"})
+    print(res.json())
     item_id = res.json()["id"]
     response = auth_client.delete(f"/items/{item_id}")
     assert response.status_code == 200
