@@ -37,15 +37,15 @@ def test_delete_item(auth_client):
 
 def test_delete_other_user_item(client):
     # User A
-    client.post("/register", json={"username": "userA", "password": "pass"})
-    res = client.post("/login", json={"username": "userA", "password": "pass"})
+    client.post("/register", json={"username": "userA", "password": "password853"})
+    res = client.post("/login", json={"username": "userA", "password": "password853"})
     tokenA = res.json()["access_token"]
     client.headers.update({"Authorization": f"Bearer {tokenA}"})
     item = client.post("/items", json={"name": "User A item"}).json()
 
-    # User B προσπαθεί να διαγράψει item του A
-    client.post("/register", json={"username": "userB", "password": "pass"})
-    res = client.post("/login", json={"username": "userB", "password": "pass"})
+    # User B tries to delete item του A
+    client.post("/register", json={"username": "userB", "password": "password853"})
+    res = client.post("/login", json={"username": "userB", "password": "password853"})
     tokenB = res.json()["access_token"]
     client.headers.update({"Authorization": f"Bearer {tokenB}"})
     response = client.delete(f"/items/{item['id']}")
