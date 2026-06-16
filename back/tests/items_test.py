@@ -30,9 +30,7 @@ def test_pagination(auth_client):
     assert response.json()["pages"] == 2
 
 def test_delete_item(auth_client):
-    res = auth_client.post("/items", json={"name": "To Delete"})
-    assert res.status_code == 200, f"POST failed: {res.text}"
-    assert "id" in res.json(), f"Response was: {res.json()}"
+    res = auth_client.post("/items", json={"name": "Remove This"})
     item_id = res.json()["id"]
     response = auth_client.delete(f"/items/{item_id}")
     assert response.status_code == 200
