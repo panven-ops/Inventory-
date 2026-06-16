@@ -1,3 +1,4 @@
+# ruff: noqa: E402
 import sys
 import os
 os.environ["ENABLE_RATE_LIMIT"] = "false"
