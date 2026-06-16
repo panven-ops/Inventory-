@@ -22,7 +22,7 @@ jobs:
         with:
           python-version: "3.11"
       - run: pip install -r back/requirements.txt
-      - run: pytest back/tests/ -s
+      - run: pytest back/tests/
         working-directory: ${{ github.workspace }}
 
   docker:
