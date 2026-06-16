@@ -5,7 +5,6 @@ from fastapi.middleware.cors import CORSMiddleware
 from lim import limiter
 from slowapi.middleware import SlowAPIMiddleware
 from database import engine, Base
-from db_models import UserDB, ItemDB
 from routes.logs_route import router as logs
 from logs_middleware import LogMiddleware
 from routes.sub_items_rout import router as sub_items

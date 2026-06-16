@@ -6,6 +6,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import pytest
 
 os.environ["DATABASE_URL"] = "sqlite:///./test.db"
+os.environ["SECRET_KEY"] = "test_super_secret_key-for-ci"
 
 from unittest.mock import MagicMock
 import redis_client
@@ -22,7 +23,6 @@ from slowapi import Limiter
 from slowapi.util import get_remote_address
 import lim
 
-# Disable rate limiting για tests
 lim.limiter = Limiter(key_func=get_remote_address, enabled=False)
 
 # Absolute path για το test.db
