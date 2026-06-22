@@ -51,6 +51,7 @@ services:
     ports:
       - "6379:6379"
     restart: unless-stopped
+    command: redis-server --maxmemory 256mb --maxmemory-policy allkeys-lru
 
 volumes:
   postgres_data:

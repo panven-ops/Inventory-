@@ -2,6 +2,15 @@ from fastapi import HTTPException
 from repositories.repo_sub_items import (get_sub_items_by_category, create_sub_item, get_sub_item_by_id, delete_sub_item, update_sub_item, update_sub_item_quantity)
 from repositories.repo_items import get_item_by_id
 from model import SubItemOut
+from redis_client import redis_client
+
+def invalidate_sub_item_cache(sub_item_id, category_id):
+    redis_client.delete(f"sub_item:{sub_item_id}")
+    redis_client.delete(f"item:{category_id}")
+
+def invalidate_on_add_delete(user_id):
+    for key in redis_client.scan_iter(f"items{user_id}:*"):
+        redis_client.delete(key)
 
 def get_category_sub_items(db, category_id, user_id):
     category = get_item_by_id(db, category_id)
@@ -25,6 +34,8 @@ def add_sub_item_service(db, category_id, sub_item, user_id):
         raise HTTPException(status_code=403, detail="Not authorized")
 
     new_sub = create_sub_item(db, sub_item.name, category_id)
+    invalidate_sub_item_cache(new_sub.id, category_id)
+    invalidate_on_add_delete(user_id)
 
     return SubItemOut.model_validate(new_sub).model_dump()
 
@@ -42,6 +53,8 @@ def delete_sub_item_service(db, category_id, sub_item_id, user_id):
         raise HTTPException(status_code=404, detail="Sub-item not found")
 
     delete_sub_item(db, sub)
+    invalidate_sub_item_cache(sub_item_id, category_id)
+    invalidate_on_add_delete(user_id)
 
 def update_sub_item_service(db, category_id, sub_item_id, updated, user_id):
 
@@ -60,6 +73,7 @@ def update_sub_item_service(db, category_id, sub_item_id, updated, user_id):
     sub.name = updated.name
 
     updated_sub = update_sub_item(db, sub)
+    invalidate_sub_item_cache(sub_item_id, category_id)
 
     return SubItemOut.model_validate(updated_sub).model_dump()
 
