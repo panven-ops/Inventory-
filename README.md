@@ -23,7 +23,7 @@ A full-stack inventory management system built for a small retail business. Mana
 - Argon2 password hashing.
 - Account lockout after repeated failed login attempts.
 - Role-based access control: users - admin
-- Rate limiting on sensitive endpoints via SlowAPI + Redis.
+- Rate limiting on sensitive endpoints via Redis.
 
 ### Audit logging 
 - Automatic request logging via Starlette middleware — every action is recorded without touching route handlers
@@ -107,7 +107,7 @@ Clone the project
     docker compose up
 ```
 
-API will be available at http://localhost:8000
+API will be available at http://localhost:8000 for backend and http://localhost:5173 for frontend
 ## Environment Variables
 
 Copy the example file and fill in the values:
