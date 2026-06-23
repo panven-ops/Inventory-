@@ -1,22 +1,24 @@
+import json
 from fastapi import HTTPException
-from repositories.repo_sub_items import (get_sub_items_by_category, create_sub_item, get_sub_item_by_id, delete_sub_item, update_sub_item, update_sub_item_quantity)
+from sqlalchemy.orm import Session
+from redis.asyncio import Redis
+from repositories.repo_sub_items import (get_sub_items_by_category, create_sub_item,get_sub_item_by_id, delete_sub_item, update_sub_item, update_sub_item_quantity)
 from repositories.repo_items import get_item_by_id
 from model import SubItemOut
-from redis_client import redis_client
 
-def invalidate_sub_item_cache(sub_item_id, category_id):
-    redis_client.delete(f"sub_item:{sub_item_id}")
-    redis_client.delete(f"item:{category_id}")
+async def invalidate_sub_item_cache(redis: Redis, sub_item_id: int, category_id: int, user_id: int):
+    await redis.delete(f"sub_item:{sub_item_id}")
+    await redis.delete(f"item:{category_id}")
 
-def invalidate_on_add_delete(user_id):
-    for key in redis_client.scan_iter(f"items{user_id}:*"):
-        redis_client.delete(key)
+    async for key in redis.scan_iter(f"items:{user_id}:*"):
+        await redis.delete(key)
 
-def get_category_sub_items(db, category_id, user_id):
+async def get_category_sub_items(db: Session, category_id: int, user_id: int):
     category = get_item_by_id(db, category_id)
 
     if not category:
         raise HTTPException(status_code=404, detail="Category not found")
+
     if category.user_id != user_id:
         raise HTTPException(status_code=403, detail="Not authorized")
 
@@ -24,7 +26,7 @@ def get_category_sub_items(db, category_id, user_id):
 
     return [SubItemOut.model_validate(s).model_dump() for s in subs]
 
-def add_sub_item_service(db, category_id, sub_item, user_id):
+async def add_sub_item_service(db: Session, redis: Redis, category_id: int, sub_item, user_id: int):
     category = get_item_by_id(db, category_id)
 
     if not category:
@@ -34,12 +36,11 @@ def add_sub_item_service(db, category_id, sub_item, user_id):
         raise HTTPException(status_code=403, detail="Not authorized")
 
     new_sub = create_sub_item(db, sub_item.name, category_id)
-    invalidate_sub_item_cache(new_sub.id, category_id)
-    invalidate_on_add_delete(user_id)
+    await invalidate_sub_item_cache(redis, new_sub.id, category_id, user_id)
 
     return SubItemOut.model_validate(new_sub).model_dump()
 
-def delete_sub_item_service(db, category_id, sub_item_id, user_id):
+async def delete_sub_item_service(db: Session, redis: Redis, category_id: int, sub_item_id: int, user_id: int):
     category = get_item_by_id(db, category_id)
 
     if not category:
@@ -47,17 +48,15 @@ def delete_sub_item_service(db, category_id, sub_item_id, user_id):
 
     if category.user_id != user_id:
         raise HTTPException(status_code=403, detail="Not authorized")
-    sub = get_sub_item_by_id(db, sub_item_id)
 
+    sub = get_sub_item_by_id(db, sub_item_id)
     if not sub:
         raise HTTPException(status_code=404, detail="Sub-item not found")
 
     delete_sub_item(db, sub)
-    invalidate_sub_item_cache(sub_item_id, category_id)
-    invalidate_on_add_delete(user_id)
+    await invalidate_sub_item_cache(redis, sub_item_id, category_id, user_id)
 
-def update_sub_item_service(db, category_id, sub_item_id, updated, user_id):
-
+async def update_sub_item_service(db: Session, redis: Redis, category_id: int, sub_item_id: int, updated, user_id: int):
     category = get_item_by_id(db, category_id)
 
     if not category:
@@ -67,18 +66,17 @@ def update_sub_item_service(db, category_id, sub_item_id, updated, user_id):
         raise HTTPException(status_code=403, detail="Not authorized")
 
     sub = get_sub_item_by_id(db, sub_item_id)
+
     if not sub:
         raise HTTPException(status_code=404, detail="Sub-item not found")
 
     sub.name = updated.name
-
     updated_sub = update_sub_item(db, sub)
-    invalidate_sub_item_cache(sub_item_id, category_id)
+    await invalidate_sub_item_cache(redis, sub_item_id, category_id, user_id)
 
     return SubItemOut.model_validate(updated_sub).model_dump()
 
-def update_quantity_service(db, category_id, sub_item_id, new_quantity, user_id):
-
+async def update_quantity_service(db: Session, category_id: int, sub_item_id: int, new_quantity: int, user_id: int):
     category = get_item_by_id(db, category_id)
 
     if not category:
@@ -88,12 +86,12 @@ def update_quantity_service(db, category_id, sub_item_id, new_quantity, user_id)
         raise HTTPException(status_code=403, detail="Not authorized")
 
     sub = get_sub_item_by_id(db, sub_item_id)
+
     if not sub:
         raise HTTPException(status_code=404, detail="Sub-item not found")
 
     if new_quantity < 0:
         raise HTTPException(status_code=400, detail="Quantity cannot be negative")
-
     updated = update_sub_item_quantity(db, sub, new_quantity)
 
     return SubItemOut.model_validate(updated).model_dump()

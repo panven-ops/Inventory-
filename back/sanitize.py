@@ -12,7 +12,7 @@ def sanitize_string(value: str, max_length: int = MAX_NAME_LENGTH) -> str:
     value = value.strip()
 
     if len(value) == 0:
-        raise ValueError("Το πεδίο δεν μπορεί να είναι κενό")
+        raise ValueError("This field can't be empty")
     if len(value) > max_length:
         raise ValueError(f"Max length {max_length} charachters")
 

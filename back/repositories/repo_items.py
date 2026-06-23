@@ -3,14 +3,7 @@ from db_models import ItemDB
 
 def get_items_by_user(db: Session, user_id: int, skip: int, limit: int):
 
-    return (
-        db.query(ItemDB)
-        .filter(ItemDB.user_id == user_id)
-        .order_by(ItemDB.id)
-        .offset(skip)
-        .limit(limit)
-        .all()
-        )
+    return (db.query(ItemDB).filter(ItemDB.user_id == user_id).order_by(ItemDB.id).offset(skip).limit(limit).all())
 
 def get_item_by_id(db: Session, item_id: int):
 

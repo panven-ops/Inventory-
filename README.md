@@ -133,9 +133,19 @@ To run tests, run the following command
     pytest tests/
 ```
 
+## Creating an Admin User
+
+First register a normal account via `POST/register` and then run:
+
+```bash
+cd app/back
+python create_admin.py
+```
+
+The created admin user will have access to `/logs` admin endpoints and to future admin-only endpoints
+
 ## Roadmap
 
-- Cached paginated limit at 3 pages.
 - Notification to admin about items that are out of stock.
 - Auto-generate restock order email: scheduled job detects low/out-of-stock 
 items and drafts an email; admin reviews, selects items to reorder, 
