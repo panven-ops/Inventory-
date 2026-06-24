@@ -36,6 +36,13 @@ A full-stack inventory management system built for a small retail business. Mana
 - BaseModelMixin for DRY serialization across all ORM models.
 - Alembic migrations for schema versioning
 - Separate test environment with its own DB and conftest.py
+
+
+## Screenshots
+![Login](docs/screenshots/Login_page.png)
+![Register](docs/screenshots/Register_page.png)
+![Inventory](docs/screenshots/Inventory-mainpage.png)
+
  
 ## Project Structure
 
@@ -129,8 +136,8 @@ cp back/.env.example back/.env
 To run tests, run the following command
 
 ```bash
-    cd app/back
-    pytest tests/
+    docker compose up -d
+    docker exec <container_id> pytest tests/ -v
 ```
 
 ## Creating an Admin User
@@ -139,7 +146,7 @@ First register a normal account via `POST/register` and then run:
 
 ```bash
 cd app/back
-python create_admin.py
+python create_admin.py <username>
 ```
 
 The created admin user will have access to `/logs` admin endpoints and to future admin-only endpoints

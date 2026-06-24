@@ -27,7 +27,7 @@ class RateLimiter:
             await redis.expire(key, self.window_seconds)
 
         if count > self.limit:
-            ttl = redis.ttl(key)
+            ttl = await redis.ttl(key)
             raise HTTPException(status_code = 429, detail = f"Rate limit has been reached. Retry after {ttl}s.")
 
     def _get_identifier(self, request: Request) -> str:

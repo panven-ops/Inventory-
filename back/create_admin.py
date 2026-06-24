@@ -4,10 +4,10 @@ import os
 sys.path.insert(0, os.path.dirname(__file__))
 
 from database import SessionLocal
-from repo/repo_users import get_user_by_username, update_user
+from repositories.repo_users import get_user_by_username, update_user
 
 def make_admin(username: str):
-    db SessionLocal()
+    db = SessionLocal()
 
     try:
         user = get_user_by_username(db, username)

@@ -25,6 +25,11 @@ export function useItems() {
   const cacheRef = useRef({});
 
   useEffect(() => {
+    cacheRef.current = {};
+    setNewItem("");
+}, [accessToken]);
+
+  useEffect(() => {
     if (!accessToken) return;
 
     const cacheKey = `${skip}-${limit}`;
