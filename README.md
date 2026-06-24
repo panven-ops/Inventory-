@@ -39,9 +39,9 @@ A full-stack inventory management system built for a small retail business. Mana
 
 
 ## Screenshots
-![Login](screenshots/Login_page.png)
-![Register](screenshots/Register_page.png)
-![Inventory](screenshots/Inventory-mainpage.png)
+![Login](Screenshots/Login_page.png)
+![Register](Screenshots/Register_page.png)
+![Inventory](Screenshots/Inventory-mainpage.png)
 
  
 ## Project Structure
