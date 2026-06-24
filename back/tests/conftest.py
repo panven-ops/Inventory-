@@ -8,7 +8,7 @@ import pytest
 os.environ["DATABASE_URL"] = "sqlite:///./test.db"
 os.environ["SECRET_KEY"] = "test_super_secret_key-for-ci"
 
-from unittest.mock import AsyncMock, MagicMock
+from unittest.mock import AsyncMock
 from redis_client import get_redis
 from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
